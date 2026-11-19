@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Bodoni Moda Variable", "Didot", "Times New Roman", serif;
+  --font-script: "Pinyon Script", cursive;
+  --font-sans: "Manrope Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --accent-rgb: 132 22 138; /* violet */
+}
+/* Sur les zones sombres, l'accent devient or */
+.bg-ink, .bg-ink\/95, .bg-ink\/90, .bg-ink\/85, .bg-violet, .bg-violet-900, .bg-violet-700, .dark-scope {
+  --accent-rgb: 248 192 18;
+}
+[dir="rtl"] {
+  --font-display: "Amiri", "Times New Roman", serif;
+  --font-script: "Amiri", serif;
+  --font-sans: "IBM Plex Sans Arabic", system-ui, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply bg-paper font-sans text-ink antialiased; font-feature-settings: "ss01"; }
+  ::selection { background: #f8c012; color: #120814; }
+  :focus-visible { outline: 2px solid #f8c012; outline-offset: 3px; border-radius: 4px; }
+  [dir="rtl"] .font-display { letter-spacing: 0 !important; line-height: 1.35; }
+  [dir="rtl"] .h-display { line-height: 1.2; }
+  [dir="rtl"] body { line-height: 1.8; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@layer components {
+  .eyebrow { @apply inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em]; }
+  [dir="rtl"] .eyebrow { letter-spacing: 0; font-size: 0.85rem; }
+  .eyebrow::before { content: ""; @apply inline-block h-[2px] w-8 bg-accent; }
+  .h-display { @apply font-display font-normal leading-[0.98] tracking-[-0.02em]; }
+  .h-section { @apply font-display text-4xl font-normal leading-[1.08] tracking-[-0.01em] md:text-5xl lg:text-6xl; }
+  .text-gold-gradient {
+    background: linear-gradient(100deg, #fce38a 0%, #f8c012 38%, #d9a20a 62%, #fde9a0 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .gold-rule { @apply h-px w-full; background: linear-gradient(90deg, transparent, rgba(248,192,18,0.55), transparent); }
+  .lux-glow { background: radial-gradient(60% 50% at 80% 10%, rgba(132,22,138,0.45), transparent 70%), radial-gradient(40% 40% at 0% 100%, rgba(248,192,18,0.10), transparent 70%); }
+  .moucharabieh {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M28 4l7 17 17 7-17 7-7 17-7-17-17-7 17-7z' fill='none' stroke='%23F8C012' stroke-opacity='0.07'/%3E%3C/svg%3E");
+  }
+  .prose-lg-custom p { @apply text-lg leading-relaxed text-ink/75; }
+  .grain { background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 3px 3px; }
+  .field { @apply w-full rounded-xl border border-ink/15 bg-white px-4 py-3.5 text-[15px] text-ink outline-none transition placeholder:text-ink/35 focus:border-violet focus:ring-4 focus:ring-violet/15; }
+  .label { @apply mb-2 block text-sm font-medium text-ink/80; }
+  .line-grid { background-image: linear-gradient(to right, rgba(248,192,18,0.07) 1px, transparent 1px); background-size: calc(100% / 6) 100%; }
+}
+
+
+/* Carrousels tactiles (téléphone) */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
