@@ -35,7 +35,7 @@ export function ActivitiesExplorer({ activities, locale, allLabel }: { activitie
         ))}
       </div>
       <motion.ul layout className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="popLayout" initial={false}>
           {list.map((a) => (
             <motion.li
               key={a.slug}
