@@ -58,3 +58,11 @@
 /* Carrousels tactiles (téléphone) */
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Apparition au défilement (voir components/Reveal.tsx).
+   Sans la classe js-reveal (pas de JS ou navigateur ancien) : tout est visible. */
+.js-reveal .reveal:not([data-in]) { opacity: 0; transform: translate3d(0, var(--reveal-y, 24px), 0); }
+.js-reveal .reveal { transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal:not([data-in]) { opacity: 1; transform: none; }
+}
