@@ -116,9 +116,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="bg-ink py-24 text-white md:py-32">
         <div className="container grid items-center gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">
-            <div className="inline-flex rounded-3xl bg-white p-8">
-              <Image src={site.logo} alt="Logo Enactus FSJES Souissi" width={360} height={240} className="h-auto w-[280px] md:w-[360px]" />
-            </div>
+            <Image src={site.logo} alt="Logo Enactus FSJES Souissi" width={420} height={255} className="h-auto w-[280px] md:w-[420px]" />
           </Reveal>
           <Reveal delay={0.1} className="lg:col-span-7">
             <Eyebrow light>
