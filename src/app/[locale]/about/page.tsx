@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import Image from "@/components/Img";
 import Link from "next/link";
 import { PageHero, Eyebrow, Placeholder, Button } from "@/components/ui";
@@ -13,7 +14,8 @@ import { formatDate } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).about.title };
+  const title = getDictionary(locale).about.title;
+  return { title, ...shareImage(locale, "about", title) };
 }
 
 function Block({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {

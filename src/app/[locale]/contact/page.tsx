@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import { Mail, MapPin, Phone, ExternalLink } from "lucide-react";
 import { PageHero, Eyebrow, Placeholder } from "@/components/ui";
 import { Reveal } from "@/components/Reveal";
@@ -10,7 +11,8 @@ import { site } from "@/content/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).contact.title };
+  const title = getDictionary(locale).contact.title;
+  return { title, ...shareImage(locale, "contact", title) };
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -80,6 +82,30 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               </div>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* Plan d'accès (Google Maps intégré, teinté aux couleurs du site) */}
+      <section className="bg-ink pb-24 text-white md:pb-32">
+        <div className="container">
+          <Reveal>
+            <div className="flex flex-wrap items-end justify-between gap-4 pt-16 md:pt-20">
+              <h2 className="h-section text-3xl md:text-5xl">{d.extra.mapTitle}</h2>
+              <a href={site.contact.mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-semibold text-gold underline decoration-gold decoration-2 underline-offset-[6px]">
+                {d.extra.openMap} <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </div>
+            <div className="relative mt-8 overflow-hidden rounded-[1.75rem] border border-gold/30 shadow-[0_40px_120px_-40px_rgba(132,22,138,0.8)]">
+              <iframe
+                title={d.extra.mapTitle}
+                src="https://maps.google.com/maps?q=Facult%C3%A9%20des%20Sciences%20Juridiques%20%C3%89conomiques%20et%20Sociales%20Souissi%20Rabat&z=15&output=embed"
+                className="lux-map h-[420px] w-full md:h-[520px]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] ring-1 ring-inset ring-gold/20" aria-hidden />
+            </div>
+          </Reveal>
         </div>
       </section>
     </>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import Image from "@/components/Img";
 import { ExternalLink } from "lucide-react";
 import { PageHero, Placeholder, Button } from "@/components/ui";
@@ -9,7 +10,8 @@ import { partners, partnerTypeLabels } from "@/content/partners";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).partners.title };
+  const title = getDictionary(locale).partners.title;
+  return { title, ...shareImage(locale, "partners", title) };
 }
 
 export default async function PartnersPage({ params }: { params: Promise<{ locale: Locale }> }) {

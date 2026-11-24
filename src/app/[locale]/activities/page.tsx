@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import { PageHero } from "@/components/ui";
 import { ActivitiesExplorer } from "@/components/ActivitiesExplorer";
 import { InstagramFeed } from "@/components/InstagramFeed";
@@ -10,7 +11,8 @@ import { instagramFallback } from "@/content/instagram";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).activities.title };
+  const title = getDictionary(locale).activities.title;
+  return { title, ...shareImage(locale, "activities", title) };
 }
 
 export default async function ActivitiesPage({ params }: { params: Promise<{ locale: Locale }> }) {

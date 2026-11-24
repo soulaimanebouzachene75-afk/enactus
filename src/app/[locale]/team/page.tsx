@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import Image from "@/components/Img";
 import { PageHero, Eyebrow, Placeholder, Button } from "@/components/ui";
 import { Reveal } from "@/components/Reveal";
@@ -9,7 +10,8 @@ import { team, groupPhoto } from "@/content/team";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).team.title };
+  const title = getDictionary(locale).team.title;
+  return { title, ...shareImage(locale, "team", title) };
 }
 
 export default async function TeamPage({ params }: { params: Promise<{ locale: Locale }> }) {

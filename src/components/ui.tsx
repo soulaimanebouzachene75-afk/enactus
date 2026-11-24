@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import Image from "@/components/Img";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
@@ -30,7 +31,16 @@ export function SectionHeading({
           {index && <span className="tabular-nums text-accent">{index}</span>}
           {eyebrow}
         </Eyebrow>
-        <h2 className={cn("h-section mt-5 text-balance", light ? "text-white" : "text-ink")}>{title}</h2>
+        <h2 className={cn("h-section mt-5 text-balance", light ? "text-white" : "text-ink")}>
+          {title.split(" ").map((w, i) => (
+            <Fragment key={i}>
+              {i > 0 && " "}
+              <span className="word" style={{ ["--i" as string]: i }}>
+                {w}
+              </span>
+            </Fragment>
+          ))}
+        </h2>
       </Reveal>
       {children && <Reveal delay={0.1} className="md:col-span-4 md:justify-self-end">{children}</Reveal>}
     </div>
@@ -61,13 +71,13 @@ export function Button({ href, children, variant = "gold", className, external }
   const icon = <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" aria-hidden />;
   if (external)
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls} data-magnetic>
         {children}
         {icon}
       </a>
     );
   return (
-    <Link href={href} className={cls}>
+    <Link href={href} className={cls} data-magnetic>
       {children}
       {icon}
     </Link>

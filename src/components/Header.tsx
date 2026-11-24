@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, Globe } from "lucide-react";
+import { Menu, X, Globe, Search } from "lucide-react";
 import { Logo } from "./Logo";
 import { InstagramIcon } from "./icons";
 import { locales, localeMeta, type Locale } from "@/i18n/config";
@@ -79,14 +79,14 @@ export function Header({ locale, d }: { locale: Locale; d: Dictionary }) {
           <Logo href={`/${locale}`} />
 
           <nav aria-label="Navigation principale" className="hidden xl:block">
-            <ul className="flex items-center gap-1">
+            <ul className="flex items-center gap-0.5 2xl:gap-1">
               {items.map((it) => (
                 <li key={it.href}>
                   <Link
                     href={it.href}
                     aria-current={isActive(it.href) ? "page" : undefined}
                     className={cn(
-                      "relative rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-colors",
+                      "relative whitespace-nowrap rounded-full px-2.5 py-2 text-[13.5px] font-medium transition-colors 2xl:px-3.5",
                       isActive(it.href) ? "text-white" : "text-white/65 hover:text-white",
                     )}
                   >
@@ -100,11 +100,20 @@ export function Header({ locale, d }: { locale: Locale; d: Dictionary }) {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 2xl:gap-3">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event("enx-search"))}
+              className="hidden h-10 shrink-0 items-center gap-2 rounded-full border border-gold/25 px-3 text-xs text-white/70 transition hover:border-gold hover:text-white sm:inline-flex"
+              aria-label={d.extra.search}
+            >
+              <Search className="h-4 w-4" />
+              <kbd className="hidden whitespace-nowrap font-sans text-[10px] text-white/45 2xl:inline">Ctrl K</kbd>
+            </button>
             <LanguageSwitcher locale={locale} label={d.nav.language} />
             <Link
               href={`/${locale}/join`}
-              className="hidden rounded-full bg-gold px-5 py-2.5 text-[13.5px] font-semibold text-ink shadow-[0_8px_30px_-10px_rgba(248,192,18,0.6)] transition hover:bg-gold-200 md:inline-flex"
+              className="hidden whitespace-nowrap rounded-full bg-gold px-5 py-2.5 text-[13.5px] font-semibold text-ink shadow-[0_8px_30px_-10px_rgba(248,192,18,0.6)] transition hover:bg-gold-200 md:inline-flex"
             >
               {d.nav.join}
             </Link>
@@ -170,6 +179,17 @@ export function Header({ locale, d }: { locale: Locale; d: Dictionary }) {
                   {d.nav.join}
                 </Link>
                 <LanguageSwitcher locale={locale} label={d.nav.language} />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    setTimeout(() => window.dispatchEvent(new Event("enx-search")), 350);
+                  }}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20"
+                  aria-label={d.extra.search}
+                >
+                  <Search className="h-5 w-5" />
+                </button>
                 <a href={site.socials[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20" aria-label="Instagram">
                   <InstagramIcon className="h-5 w-5" />
                 </a>

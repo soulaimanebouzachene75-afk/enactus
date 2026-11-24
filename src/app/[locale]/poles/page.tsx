@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import Image from "@/components/Img";
 import { Check } from "lucide-react";
 import { PageHero, Placeholder, Button } from "@/components/ui";
@@ -11,7 +12,8 @@ import { team } from "@/content/team";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).poles.title };
+  const title = getDictionary(locale).poles.title;
+  return { title, ...shareImage(locale, "poles", title) };
 }
 
 export default async function PolesPage({ params }: { params: Promise<{ locale: Locale }> }) {

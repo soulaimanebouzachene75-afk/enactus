@@ -3,17 +3,20 @@ import Link from "next/link";
 import { ArrowDown, ExternalLink } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { Button, Eyebrow, Placeholder, SectionHeading, TextLink } from "@/components/ui";
-import { ActivityCard } from "@/components/ActivityCard";
+import { formatDate } from "@/lib/utils";
 import { Counter } from "@/components/Counter";
 import { InstagramFeed } from "@/components/InstagramFeed";
 import { MemberCard } from "@/components/MemberCard";
 import { Rail } from "@/components/Rail";
 import { Hero3D } from "@/components/Hero3D";
+import { SeasonStory } from "@/components/SeasonStory";
+import { NextEvent } from "@/components/NextEvent";
+import { BgVideo } from "@/components/BgVideo";
 import { Tilt } from "@/components/Tilt";
 import { getDictionary } from "@/i18n/dictionaries";
 import { tr, type Locale } from "@/i18n/config";
 import { keyFigures, site } from "@/content/site";
-import { activities } from "@/content/activities";
+import { activities, categoryLabels } from "@/content/activities";
 import { projectProcess, projects } from "@/content/projects";
 import { partners, partnerTypeLabels } from "@/content/partners";
 import { team } from "@/content/team";
@@ -24,8 +27,6 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
   const { locale } = await params;
   const d = getDictionary(locale);
   // Mise en avant : la plus récente activité disposant d'une galerie photo.
-  const featured = activities.find((a) => a.gallery.length > 0) ?? activities[0];
-  const rest = activities.filter((a) => a.slug !== featured.slug);
   const board = team.filter((m) => !m.placeholder);
 
   return (
@@ -43,7 +44,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
               {d.home.slogan.map((w, i) => (
                 <Reveal key={w} delay={0.1 + i * 0.12} y={40}>
                   {i === 2 ? (
-                    <span className="block font-script text-[1.12em] font-normal leading-[1.05] text-gold-gradient rtl:font-display rtl:italic">{w}</span>
+                    <span className="block font-script text-[1.12em] font-normal leading-[1.05] text-gold-gradient shimmer rtl:font-display rtl:italic">{w}</span>
                   ) : (
                     <span className="block uppercase tracking-[0.02em] rtl:normal-case">{w}</span>
                   )}
@@ -175,33 +176,47 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
         </div>
       </section>
 
-      {/* ───────── ACTIVITÉS ───────── */}
-      <section className="py-20 md:py-36">
-        <div className="container">
-          <SectionHeading index="04" eyebrow={d.home.latestEyebrow} title={d.home.latestTitle}>
-            <TextLink href={`/${locale}/activities`}>{d.common.seeAll}</TextLink>
-          </SectionHeading>
-          {/* Téléphone : carrousel */}
-          <div className="mt-10 md:hidden">
-            <Rail>
-              {[featured, ...rest].map((a) => (
-                <ActivityCard key={a.slug} activity={a} locale={locale} />
-              ))}
-            </Rail>
-          </div>
-          {/* Ordinateur : mise en page éditoriale */}
-          <div className="mt-16 hidden gap-10 md:grid lg:grid-cols-12">
-            <Reveal className="lg:col-span-7">
-              <ActivityCard activity={featured} locale={locale} featured />
-            </Reveal>
-            <div className="grid content-start gap-10 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
-              {rest.slice(0, 2).map((a, i) => (
-                <Reveal key={a.slug} delay={0.1 + i * 0.1}>
-                  <ActivityCard activity={a} locale={locale} row />
-                </Reveal>
-              ))}
-            </div>
-          </div>
+      {/* ───────── PROCHAIN RENDEZ-VOUS (s'affiche seulement si une activité est à venir) ───────── */}
+      <NextEvent
+        events={activities.map((a) => ({
+          title: tr(a.title, locale),
+          href: `/${locale}/activities/${a.slug}`,
+          date: a.date,
+          time: a.time,
+          place: tr(a.place, locale),
+          description: tr(a.excerpt, locale),
+        }))}
+        labels={{
+          title: d.extra.nextEvent, days: d.extra.days, hours: d.extra.hours, minutes: d.extra.minutes, seconds: d.extra.seconds,
+          add: d.extra.addToCalendar, google: d.extra.googleCalendar, ics: d.extra.icsFile,
+        }}
+      />
+
+      {/* ───────── RÉCIT DE LA SAISON (défilement) ───────── */}
+      <section className="lux-glow relative bg-ink py-20 text-white md:py-32">
+        <div className="moucharabieh pointer-events-none absolute inset-0" aria-hidden />
+        <div className="container relative">
+          <SeasonStory
+            chapters={[...activities]
+              .sort((x, y) => x.date.localeCompare(y.date))
+              .map((a) => ({
+                slug: a.slug,
+                href: `/${locale}/activities/${a.slug}`,
+                title: tr(a.title, locale),
+                subtitle: a.subtitle ? tr(a.subtitle, locale) : undefined,
+                excerpt: tr(a.excerpt, locale),
+                date: formatDate(a.date, locale),
+                place: tr(a.place, locale).split(",")[0],
+                category: tr(categoryLabels[a.category], locale),
+                cover: a.cover,
+              }))}
+            eyebrow={d.extra.seasonEyebrow}
+            title={d.extra.seasonTitle}
+            chapterLabel={d.extra.chapter}
+            readMore={d.common.readMore}
+            seeAll={d.common.seeAll}
+            seeAllHref={`/${locale}/activities`}
+          />
         </div>
       </section>
 
@@ -282,6 +297,8 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
 
       {/* ───────── REJOINDRE ───────── */}
       <section className="relative overflow-hidden bg-violet py-20 text-white md:py-32">
+        <BgVideo src="/videos/need-assessment-1-sdg-in-action.mp4" poster="/videos/sdg-poster.jpg" label={d.extra.joinVideo} />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-violet via-violet/85 to-violet/40 rtl:bg-gradient-to-l" aria-hidden />
         <div className="moucharabieh pointer-events-none absolute inset-0 opacity-70" aria-hidden />
         <div className="pointer-events-none absolute -end-32 -top-32 h-[420px] w-[420px] rounded-full bg-gold/25 blur-[120px]" aria-hidden />
         <div className="container relative grid items-end gap-10 lg:grid-cols-12">

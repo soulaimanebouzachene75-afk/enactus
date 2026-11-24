@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MapPin, Mail, Phone } from "lucide-react";
 import { Logo } from "./Logo";
 import { Tilt } from "./Tilt";
+import { InstallButton } from "./PwaRegister";
 import { InstagramIcon } from "./icons";
 import { navItems } from "@/lib/nav";
 import { site } from "@/content/site";
@@ -21,6 +22,9 @@ export function Footer({ locale, d }: { locale: Locale; d: Dictionary }) {
             </Tilt>
             <p className="mt-8 font-display text-3xl italic text-gold-gradient md:text-4xl">{d.footer.tagline}</p>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">{d.footer.affiliation}</p>
+            <div className="mt-6">
+              <InstallButton label={d.extra.install} />
+            </div>
           </div>
           <div className="grid gap-10 sm:grid-cols-3 lg:col-span-7">
             <div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import { PageHero, Eyebrow, Placeholder, Button } from "@/components/ui";
 import { Reveal } from "@/components/Reveal";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -7,7 +8,8 @@ import { projects, projectProcess, sdgNames } from "@/content/projects";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).projects.title };
+  const title = getDictionary(locale).projects.title;
+  return { title, ...shareImage(locale, "projects", title) };
 }
 
 export default async function ProjectsPage({ params }: { params: Promise<{ locale: Locale }> }) {

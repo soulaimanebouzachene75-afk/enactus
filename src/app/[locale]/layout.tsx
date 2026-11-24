@@ -13,10 +13,21 @@ import "../globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileTabBar } from "@/components/MobileTabBar";
-import { isLocale, locales, localeMeta, type Locale } from "@/i18n/config";
+import { revealScript } from "@/components/Reveal";
+import { Intro, introScript } from "@/components/Intro";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import { Cursor } from "@/components/Cursor";
+import { CommandPalette, type SearchItem } from "@/components/CommandPalette";
+import { PwaRegister } from "@/components/PwaRegister";
+import { navItems } from "@/lib/nav";
+import { activities } from "@/content/activities";
+import { team } from "@/content/team";
+import { poles } from "@/content/poles";
+import { isLocale, locales, localeMeta, tr, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { site } from "@/content/site";
 import { asset } from "@/lib/utils";
+import { shareImage } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -37,9 +48,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     metadataBase: new URL(site.url),
     title: { default: `${site.name} — Think. Create. Impact.`, template: `%s · ${site.name}` },
     description: descriptions[l],
-    icons: { icon: asset(site.logo) },
-    alternates: { languages: Object.fromEntries(locales.map((x) => [x, `/${x}`])) },
-    openGraph: { title: site.name, description: descriptions[l], images: [asset(site.heroImage)], locale: l, type: "website" },
+    icons: { icon: asset("/icons/icon-192.png"), apple: asset("/icons/apple-touch-icon.png") },
+    manifest: asset("/manifest.webmanifest"),
+    appleWebApp: { capable: true, title: "Enactus Souissi", statusBarStyle: "black-translucent" },
+    alternates: { languages: Object.fromEntries(locales.map((x) => [x, `${site.url}/${x}/`])) },
+    ...shareImage(l, "home", site.name, descriptions[l]),
   };
 }
 
@@ -51,13 +64,39 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const d = getDictionary(locale);
   const meta = localeMeta[locale];
   return (
-    <html lang={meta.htmlLang} dir={meta.dir}>
+    <html lang={meta.htmlLang} dir={meta.dir} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: revealScript + introScript }} />
+      </head>
       <body>
+        <Intro tagline="Think. Create. Impact." />
         <Header locale={locale} d={d} />
         <main id="main">{children}</main>
         <Footer locale={locale} d={d} />
         <MobileTabBar locale={locale} d={d} />
+        <CommandPalette
+          items={searchIndex(locale, d)}
+          labels={{
+            placeholder: d.extra.searchPlaceholder, hint: d.extra.searchHint, empty: d.extra.noResults,
+            types: { page: d.extra.typePage, activity: d.extra.typeActivity, member: d.extra.typeMember, pole: d.extra.typePole },
+          }}
+        />
+        <SmoothScroll />
+        <Cursor />
+        <PwaRegister />
       </body>
     </html>
   );
+}
+
+/** Index de la recherche rapide (Ctrl+K), construit à partir des contenus. */
+function searchIndex(locale: Locale, d: ReturnType<typeof getDictionary>): SearchItem[] {
+  return [
+    { title: d.nav.home, href: `/${locale}`, type: "page" as const },
+    ...navItems(locale, d).map((n) => ({ title: n.label, href: n.href, type: "page" as const })),
+    { title: d.nav.join, href: `/${locale}/join`, type: "page" as const },
+    ...activities.map((a) => ({ title: tr(a.title, locale), subtitle: a.subtitle ? tr(a.subtitle, locale) : undefined, href: `/${locale}/activities/${a.slug}`, type: "activity" as const })),
+    ...team.filter((m) => !m.placeholder).map((m) => ({ title: m.name, subtitle: tr(m.role, locale), href: `/${locale}/team`, type: "member" as const })),
+    ...poles.map((p) => ({ title: tr(p.name, locale), subtitle: tr(p.description, locale), href: `/${locale}/poles#${p.id}`, type: "pole" as const })),
+  ];
 }

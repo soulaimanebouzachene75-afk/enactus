@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import Image from "@/components/Img";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,6 +7,7 @@ import { ArrowLeft, CalendarDays, Clock, MapPin, Mic2, Target } from "lucide-rea
 import { Eyebrow, Placeholder } from "@/components/ui";
 import { Reveal } from "@/components/Reveal";
 import { Gallery } from "@/components/Gallery";
+import { CalendarIfUpcoming } from "@/components/NextEvent";
 import { ActivityCard } from "@/components/ActivityCard";
 import { InstagramIcon } from "@/components/icons";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -24,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   const { locale, slug } = await params;
   const a = getActivity(slug);
   if (!a) return {};
-  return { title: tr(a.title, locale), description: tr(a.excerpt, locale), openGraph: { images: [asset(a.cover)] } };
+  return { title: tr(a.title, locale), description: tr(a.excerpt, locale), ...shareImage(locale, `activity-${a.slug}`, tr(a.title, locale), tr(a.excerpt, locale)) };
 }
 
 export default async function ActivityPage({ params }: { params: Promise<{ locale: Locale; slug: string }> }) {
@@ -72,6 +74,10 @@ export default async function ActivityPage({ params }: { params: Promise<{ local
                     <dd className="mt-2 font-medium">{tr(a.place, locale)}</dd>
                   </div>
                 </dl>
+                <CalendarIfUpcoming
+                  event={{ title: tr(a.title, locale), href: `/${locale}/activities/${a.slug}`, date: a.date, time: a.time, place: tr(a.place, locale), description: tr(a.excerpt, locale) }}
+                  labels={{ add: d.extra.addToCalendar, google: d.extra.googleCalendar, ics: d.extra.icsFile }}
+                />
               </Reveal>
             </div>
             <Reveal delay={0.15} className="lg:col-span-5">

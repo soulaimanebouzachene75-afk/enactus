@@ -95,3 +95,83 @@
   .tilt-card { transform: none !important; }
   .tilt-float { animation: none; }
 }
+
+/* ═════════ Écran d'ouverture (components/Intro.tsx) ═════════
+   100 % CSS : disparaît tout seul, même sans JavaScript.
+   Ne s'affiche qu'une fois par visite (classe intro-seen ajoutée par script). */
+.intro {
+  position: fixed; inset: 0; z-index: 200; display: grid; place-items: center;
+  background: radial-gradient(60% 50% at 50% 40%, #3a0f40 0%, #120814 70%);
+  animation: intro-out 0.7s cubic-bezier(0.76, 0, 0.24, 1) 1.9s forwards;
+  pointer-events: none;
+}
+.intro-seen .intro { display: none; }
+.intro__inner { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+.intro__logo {
+  width: min(62vw, 320px); height: auto;
+  -webkit-mask-image: linear-gradient(100deg, #000 40%, transparent 60%);
+  mask-image: linear-gradient(100deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 300% 100%; mask-size: 300% 100%;
+  -webkit-mask-position: 100% 0; mask-position: 100% 0;
+  animation: intro-mask 1.2s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+  filter: drop-shadow(0 20px 40px rgba(132, 22, 138, 0.6));
+}
+.intro__line { height: 1px; width: 0; background: linear-gradient(90deg, transparent, #f8c012, transparent); animation: intro-line 1s ease 0.6s forwards; }
+.intro__tag {
+  font-family: var(--font-display); font-style: italic; font-size: 1.1rem; letter-spacing: 0.08em;
+  opacity: 0; transform: translateY(8px); animation: intro-tag 0.8s ease 0.95s forwards;
+}
+@keyframes intro-mask { to { -webkit-mask-position: 0 0; mask-position: 0 0; } }
+@keyframes intro-line { to { width: min(56vw, 260px); } }
+@keyframes intro-tag { to { opacity: 1; transform: none; } }
+@keyframes intro-out { to { opacity: 0; visibility: hidden; transform: scale(1.03); } }
+
+/* ═════════ Rideau entre les pages (app/[locale]/template.tsx) ═════════ */
+.page-curtain {
+  position: fixed; inset: 0; z-index: 150; pointer-events: none;
+  background: linear-gradient(180deg, #2a0a2e 0%, #120814 100%);
+  transform-origin: top; animation: curtain-up 0.85s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+.page-curtain::after {
+  content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, #f8c012, transparent);
+}
+@keyframes curtain-up { from { transform: translateY(0); } to { transform: translateY(-101%); } }
+.page-enter { animation: page-enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
+@keyframes page-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ═════════ Curseur doré (components/Cursor.tsx) — souris uniquement ═════════ */
+.lux-cursor, .lux-cursor-dot { position: fixed; top: 0; left: 0; z-index: 300; pointer-events: none; border-radius: 9999px; opacity: 0; }
+.lux-cursor {
+  width: 38px; height: 38px; margin: -19px 0 0 -19px; border: 1px solid rgba(248, 192, 18, 0.7);
+  transition: width 0.35s, height 0.35s, margin 0.35s, background-color 0.35s, border-color 0.35s, opacity 0.3s;
+}
+.lux-cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: #f8c012; transition: opacity 0.3s; }
+.cursor-on .lux-cursor, .cursor-on .lux-cursor-dot { opacity: 1; }
+.cursor-hover .lux-cursor { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: rgba(248, 192, 18, 0.12); border-color: #f8c012; }
+.cursor-hover .lux-cursor-dot { opacity: 0; }
+[data-magnetic] { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ═════════ Titres révélés mot par mot ═════════ */
+.word { display: inline-block; }
+.js-reveal .reveal .word { transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(var(--i, 0) * 55ms + 80ms); }
+.js-reveal .reveal:not([data-in]) .word { opacity: 0; transform: translateY(0.45em); }
+
+/* ═════════ Reflet doré qui passe ═════════ */
+.shimmer { background-size: 250% 100%; animation: shimmer 5s ease-in-out infinite; }
+@keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+/* Défilement fluide (Lenis) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+  .page-curtain { display: none; }
+  .page-enter, .shimmer { animation: none; }
+  .js-reveal .reveal:not([data-in]) .word { opacity: 1; transform: none; }
+}
+
+/* Carte Google teintée nuit / violet (page Contact) */
+.lux-map { filter: invert(0.92) hue-rotate(200deg) saturate(0.55) brightness(0.9) contrast(0.95); }

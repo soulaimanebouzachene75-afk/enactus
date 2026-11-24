@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareImage } from "@/lib/seo";
 import { PageHero, Eyebrow } from "@/components/ui";
 import { Reveal } from "@/components/Reveal";
 import { JoinForm } from "@/components/Forms";
@@ -8,7 +9,8 @@ import { poles } from "@/content/poles";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: getDictionary(locale).join.title };
+  const title = getDictionary(locale).join.title;
+  return { title, ...shareImage(locale, "join", title) };
 }
 
 export default async function JoinPage({ params }: { params: Promise<{ locale: Locale }> }) {

@@ -12,7 +12,9 @@ import { poles } from "./poles";
 
 export const site = {
   name: "Enactus FSJES Souissi",
-  url: "https://enactus-fsjes-souissi.ma", // ← à remplacer par le domaine réel
+  // Adresse publique du site (utilisée pour les aperçus de partage et le plan du site).
+  // Si vous passez à un nom de domaine, remplacez-la ici.
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://soulaimanebouzachene75-afk.github.io/enactus",
   logo: "/images/brand/logo-enactus-fsjes-souissi.png",
   heroImage: "/images/team/equipe.jpg",
 
