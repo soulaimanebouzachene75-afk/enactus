@@ -3,6 +3,7 @@ import Image from "@/components/Img";
 import Link from "next/link";
 import { PageHero, Eyebrow, Placeholder, Button } from "@/components/ui";
 import { Reveal } from "@/components/Reveal";
+import { Tilt } from "@/components/Tilt";
 import { getDictionary } from "@/i18n/dictionaries";
 import { tr, type Locale } from "@/i18n/config";
 import { presentation, missionParagraphs, historyText, vision, visionValidated, values, valuesValidated } from "@/content/about";
@@ -116,7 +117,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="bg-ink py-24 text-white md:py-32">
         <div className="container grid items-center gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">
-            <Image src={site.logo} alt="Logo Enactus FSJES Souissi" width={420} height={255} className="h-auto w-[280px] md:w-[420px]" />
+            <Tilt max={14} glare={false} float className="inline-block">
+              <Image src={site.logo} alt="Logo Enactus FSJES Souissi" width={420} height={255} className="h-auto w-[280px] drop-shadow-[0_30px_40px_rgba(132,22,138,0.55)] md:w-[420px]" />
+            </Tilt>
           </Reveal>
           <Reveal delay={0.1} className="lg:col-span-7">
             <Eyebrow light>

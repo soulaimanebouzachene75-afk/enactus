@@ -4,6 +4,7 @@ import { ArrowUpRight, CalendarDays, MapPin } from "lucide-react";
 import { categoryLabels, type Activity } from "@/content/activities";
 import { tr, type Locale } from "@/i18n/config";
 import { cn, formatDate } from "@/lib/utils";
+import { Tilt } from "./Tilt";
 
 export function ActivityCard({
   activity,
@@ -21,7 +22,8 @@ export function ActivityCard({
   return (
     <Link href={`/${locale}/activities/${activity.slug}`} className="group block h-full">
       <article className={cn("flex h-full", row ? "flex-col lg:flex-row lg:items-center lg:gap-6" : "flex-col")}>
-        <div className={cn("relative shrink-0 overflow-hidden rounded-2xl bg-ink/5", featured ? "aspect-[4/3]" : "aspect-square", row && "lg:w-[46%]")}>
+        <Tilt className={cn("shrink-0", row && "lg:w-[46%]")} max={featured ? 5 : 8} glare={false}>
+        <div className={cn("relative overflow-hidden rounded-2xl bg-ink/5 shadow-[0_25px_60px_-35px_rgba(18,8,20,0.6)]", featured ? "aspect-[4/3]" : "aspect-square")}>
           <Image
             src={activity.cover}
             alt={tr(activity.title, locale)}
@@ -35,7 +37,9 @@ export function ActivityCard({
           <span className="absolute bottom-4 end-4 flex h-11 w-11 translate-y-2 items-center justify-center rounded-full bg-gold text-ink opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
             <ArrowUpRight className="h-5 w-5 rtl:-scale-x-100" aria-hidden />
           </span>
+          <span className="tilt-glare" aria-hidden />
         </div>
+        </Tilt>
         <div className={cn("pt-5", row && "lg:pt-0")}>
           <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-1 text-xs", dark ? "text-white/55" : "text-ink/55")}>
             <span className="inline-flex items-center gap-1.5">

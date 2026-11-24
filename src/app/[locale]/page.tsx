@@ -8,6 +8,8 @@ import { Counter } from "@/components/Counter";
 import { InstagramFeed } from "@/components/InstagramFeed";
 import { MemberCard } from "@/components/MemberCard";
 import { Rail } from "@/components/Rail";
+import { Hero3D } from "@/components/Hero3D";
+import { Tilt } from "@/components/Tilt";
 import { getDictionary } from "@/i18n/dictionaries";
 import { tr, type Locale } from "@/i18n/config";
 import { keyFigures, site } from "@/content/site";
@@ -31,6 +33,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
       {/* ───────── HERO ───────── */}
       <section className="lux-glow relative overflow-hidden bg-ink text-white">
         <div className="moucharabieh pointer-events-none absolute inset-0" aria-hidden />
+        <Hero3D targetId="hero-team-photo" />
         <div className="container relative grid min-h-[100svh] items-center gap-10 pb-28 pt-28 md:pb-20 lg:grid-cols-12 lg:gap-12 lg:pt-36">
           <div className="lg:col-span-7">
             <Reveal>
@@ -60,13 +63,16 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
           </div>
           <Reveal delay={0.3} className="lg:col-span-5">
             <figure className="relative mx-auto max-w-[22rem] sm:max-w-sm lg:max-w-[26rem]">
-              <div className="relative">
+              <Tilt max={7} glare={false}>
+              <div className="relative" id="hero-team-photo">
                 <div className="absolute -inset-3 rounded-[2rem] border border-gold/40" aria-hidden />
                 <div className="absolute -inset-6 hidden rounded-[2.4rem] border border-gold/15 md:block" aria-hidden />
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[1.6rem] shadow-[0_40px_120px_-30px_rgba(132,22,138,0.7)]">
                   <Image src={site.heroImage} alt={d.home.heroCaption} fill priority sizes="(min-width:1024px) 420px, 90vw" className="object-cover" />
+                  <span className="tilt-glare" aria-hidden />
                 </div>
               </div>
+              </Tilt>
               <figcaption className="mt-7 flex items-center justify-center gap-3 text-xs uppercase tracking-[0.25em] text-gold/80 rtl:tracking-normal">
                 <span className="h-px w-8 bg-gold/60" aria-hidden />
                 {d.home.boardEyebrow}
@@ -237,11 +243,12 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
           <ul className="mt-12 grid gap-4 md:mt-14 md:grid-cols-3">
             {partners.map((p, i) => (
               <Reveal as="li" key={p.id} delay={i * 0.08}>
+                <Tilt className="h-full" max={6} glare={false}>
                 <a
                   href={p.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex h-full min-h-[11rem] flex-col justify-between rounded-3xl border border-ink/10 bg-white p-7 transition duration-500 hover:-translate-y-1 hover:border-gold hover:shadow-[0_30px_70px_-35px_rgba(132,22,138,0.45)]"
+                  className="group flex h-full min-h-[11rem] flex-col justify-between rounded-3xl border border-ink/10 bg-white p-7 transition duration-500 relative overflow-hidden hover:border-gold hover:shadow-[0_30px_70px_-35px_rgba(132,22,138,0.45)]"
                 >
                   <span className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.2em] text-violet rtl:tracking-normal">
                     {tr(partnerTypeLabels[p.type], locale)}
@@ -254,7 +261,9 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
                       <span className="font-display text-3xl leading-tight">{p.name}</span>
                     )}
                   </span>
+                <span className="tilt-glare" aria-hidden />
                 </a>
+                </Tilt>
               </Reveal>
             ))}
           </ul>

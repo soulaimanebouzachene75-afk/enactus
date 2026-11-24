@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Mail, Phone } from "lucide-react";
 import { Logo } from "./Logo";
+import { Tilt } from "./Tilt";
 import { InstagramIcon } from "./icons";
 import { navItems } from "@/lib/nav";
 import { site } from "@/content/site";
@@ -15,7 +16,9 @@ export function Footer({ locale, d }: { locale: Locale; d: Dictionary }) {
       <div className="container pb-32 pt-20 md:pb-10">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Logo href={`/${locale}`} size="lg" />
+            <Tilt max={12} glare={false} float className="inline-block">
+              <Logo href={`/${locale}`} size="lg" />
+            </Tilt>
             <p className="mt-8 font-display text-3xl italic text-gold-gradient md:text-4xl">{d.footer.tagline}</p>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">{d.footer.affiliation}</p>
           </div>
